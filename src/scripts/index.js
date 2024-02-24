@@ -45,9 +45,16 @@ initialCards.forEach((item) => {
 });
 
 
-// profile__edit-button profile__add-button 
+const openPopUp = document.querySelector('.open_pop_up');
+const closePopUp = document.querySelector('.popup__close');
+const popUp = document.querySelector('.popup');
 
-const accountInfo = document.querySelector('.profile__edit-button');
-const addCard = document.querySelector('.profile__add-button');
+openPopUp.addEventListener('click', function(evt) {
+  evt.preventDefault();
+  popUp.classList.add('popup_is-opened');
+});
 
-accountInfo.addEventListener('click', )
+closePopUp.addEventListener('click', () => {
+  popUp.classList.remove('popup_is-opened')
+});
+
