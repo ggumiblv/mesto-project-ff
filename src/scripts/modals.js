@@ -1,29 +1,19 @@
-import { ProfilePopUp, nameInput, jobInput, closePopupEsc } from "./index";
-
 //Открытие и закрытие попапов
 
-export function openPopUp(evt) {
-  evt.classList.add("popup_is-opened");
+export function openPopUp(popup) {
+  popup.classList.add("popup_is-opened");
   document.addEventListener("keydown", closePopupEsc);
 }
 
-export function closePopup(evt) {
-  evt.classList.remove("popup_is-opened");
+export function closePopup(popup) {
+  popup.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", closePopupEsc);
 }
 
-export function handleProfileFormSubmit(evt) {
+const closePopupEsc = (evt) => {
+    if (evt.key === "Escape") {
+      const openedPopup = document.querySelector(".popup_is-opened");
+      closePopup(openedPopup);
+    }
+  };
 
-    evt.preventDefault();
-  
-    const nameInputValue = nameInput.value;
-    const jobInputValue = jobInput.value;
-  
-    const currentName = document.querySelector(".profile__title");
-    const currentDescription = document.querySelector(".profile__description");
-  
-    currentName.textContent = nameInputValue;
-    currentDescription.textContent = jobInputValue;
-
-    closePopup(ProfilePopUp);
-  }
