@@ -21,7 +21,6 @@ export function createCard(cardDetails, deleteCard, likeCard, openPopUp, openIma
     likeButton.addEventListener("click", likeCard);
   
     cardImage.addEventListener("click", () => {
-      openPopUp(imagePopUp);
       openImage(cardDetails);
     });
   

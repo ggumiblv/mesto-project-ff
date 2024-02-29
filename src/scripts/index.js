@@ -7,26 +7,20 @@ const placesList = document.querySelector(".places__list");
 const openingButtonProfilePopUp = document.querySelector(
   ".profile__edit-button"
 );
-const closingButtonProfilePopUp = document.querySelector(
-  ".popup_type_edit_close"
-);
 const profilePopUp = document.querySelector(".popup_type_edit");
 const openingButtonAddPopUp = document.querySelector(".profile__add-button");
-const closingButtonAddPopUp = document.querySelector(
-  ".popup_type_new-card_close"
-);
 const addPopUp = document.querySelector(".popup_type_new-card");
-const closingButtonImagePopUp = document.querySelector(
-  ".popup_type_image_close"
-);
 const imagePopUp = document.querySelector(".popup_type_image");
 const profileFormElement = document.querySelector('[name="edit-profile"]');
+const addFormElement = document.querySelector('[name="new-place"]');
 const currentName = document.querySelector(".profile__title");
 const currentDescription = document.querySelector(".profile__description");
 const nameInput = document.querySelector(".popup__input_type_name");
 const jobInput = document.querySelector(".popup__input_type_description");
 const namePlaceInput = document.querySelector(".popup__input_type_card-name");
 const linkPlaceInput = document.querySelector(".popup__input_type_url");
+const popupImage = document.querySelector(".popup__image");
+const popupCaption = document.querySelector(".popup__caption");
 
 // @todo: Вывести карточки на страницу
 
@@ -37,8 +31,9 @@ initialCards.forEach((cardDetails) => {
 });
 
 export function openImage(newCardDetails) {
-  const popupImage = document.querySelector(".popup__image");
-  const popupCaption = document.querySelector(".popup__caption");
+  const imagePopUp = document.querySelector(".popup_type_image");
+  openPopUp(imagePopUp)
+
   popupImage.src = newCardDetails.link;
   popupImage.alt = newCardDetails.name;
   popupCaption.textContent = newCardDetails.name;
@@ -53,21 +48,20 @@ openingButtonProfilePopUp.addEventListener("click", function (evt) {
   jobInput.value = currentDescription.textContent;
 });
 
-closingButtonProfilePopUp.addEventListener("click", () => {
-  closePopup(profilePopUp);
-});
-
 openingButtonAddPopUp.addEventListener("click", function (evt) {
   evt.preventDefault();
   openPopUp(addPopUp);
 });
 
-closingButtonAddPopUp.addEventListener("click", () => {
-  closePopup(addPopUp);
-});
-
-closingButtonImagePopUp.addEventListener("click", () => {
-  closePopup(imagePopUp);
+const popups = document.querySelectorAll(".popup");  // Выбираем все существующие попапы в коллекцию
+popups.forEach( popup => { // Для каждого попапа делаем следуюущее
+  const closeButton = popup.querySelector(".popup__close");  // Находим в попапе кнопку крестик
+  closeButton.addEventListener("click", () => closePopup( popup ) );  // Устанавливаем слушатель на крестик
+  popup.addEventListener('mousedown', (evt) => {    // Устанавливаем слушатель оверлея
+    if (evt.target === popup) { 
+      closePopup(popup); 
+    } 
+  }); 
 });
 
 // закрытие кликом по оверлею
@@ -122,4 +116,4 @@ function createNewCard(evt) {
 
 //Добавление новой карточки
 
-addPopUp.addEventListener("submit", createNewCard);
+addFormElement.addEventListener("submit", createNewCard);
