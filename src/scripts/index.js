@@ -31,7 +31,6 @@ initialCards.forEach((cardDetails) => {
 });
 
 export function openImage(newCardDetails) {
-  const imagePopUp = document.querySelector(".popup_type_image");
   openPopUp(imagePopUp)
 
   popupImage.src = newCardDetails.link;
