@@ -2,7 +2,7 @@
 
 import { closePopup } from "./modals";
 
-export function createCard(cardDetails, deleteMyCard, likeCard, likeMyCard, openPopUp, openImage, getProfileData) {
+export function createCard(cardDetails, deleteMyCard, likeCard, openPopUp, openImage, getProfileData, putLike, deleteLike) {
 
     const cardTemplate = document.querySelector("#card-template").content;
     const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
@@ -21,10 +21,9 @@ export function createCard(cardDetails, deleteMyCard, likeCard, likeMyCard, open
     cardElement.LikedByMe = false;
 
     const myProfileData  = getProfileData();
-
+    
     if (cardDetails.owner === undefined)
     {
-      likeCounter.textContent = 0;
       cardElement.CreatorID = myProfileData._id;
       likeCounter.remove;
     }
@@ -32,29 +31,26 @@ export function createCard(cardDetails, deleteMyCard, likeCard, likeMyCard, open
     {
       cardElement.CreatorID = cardDetails.owner._id;
       cardElement.ElementId = cardDetails._id;
-      if (cardDetails.likes.length != 0) {
-        likeCounter.textContent = cardDetails.likes.length;
-        cardDetails.likes.forEach(element => {
-          if (element._id === myProfileData._id)
-          {
-            cardElement.LikedByMe = true;
-            likeButton.classList.add("card__like-button_is-active");
-          }
-        });
-      }
-      else
-      {
-        likeCounter.remove;
-      }
-    }
+
+   isLiked(cardDetails);
     
     if (cardElement.CreatorID === myProfileData._id)
     {
       deleteButton.addEventListener("click", () => {
       openPopUp(deleteCardPopup);
       deleteSureButton.addEventListener("click", () => {
-        deleteMyCard(cardElement);
+        deleteMyCard(cardElement, myProfileData)
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          }
+          return Promise.reject(`Ошибка: ${res.status}`);
+        }).finally(() => {
+          deleteSureButton.textContent = "Сохранить";
+        });
+
         closePopup(deleteCardPopup);
+        deleteSureButton.textContent = "Сохранение...";
      });
     });
     }
@@ -64,7 +60,7 @@ export function createCard(cardDetails, deleteMyCard, likeCard, likeMyCard, open
     }    
     
     likeButton.addEventListener("click", () => {
-    likeMyCard(cardElement);
+    likeCard(cardElement, putLike, deleteLike, myProfileData);
     });
 
     cardImage.addEventListener("click", () => {
@@ -74,17 +70,57 @@ export function createCard(cardDetails, deleteMyCard, likeCard, likeMyCard, open
     return cardElement;
   }
    
-  export function likeCard(evt) {
-    const likeCounter = evt.target.parentElement.querySelector(".likes-counter");
-    if (evt.target.classList.contains("card__like-button_is-active"))
-    {
-      likeCounter.textContent = Number(likeCounter.textContent) - 1;
+function isLiked (cardDetails) {
+   // если лайков не 0
+ if (cardDetails.likes.length != 0) 
+ {
+   // то присвоить счетчику кол-во
+   likeCounter.textContent = cardDetails.likes.length;
+   //и обходим каждый лайк и если там есть мой
+   cardDetails.likes.forEach(element => {
+     if (element._id === myProfileData._id)
+     {
+       //то отрисовываем что кнопка активна и присваиваем лайкедбай ми тру
+       cardElement.LikedByMe = true;
+       likeButton.classList.add("card__like-button_is-active");
+     }
+   });
+ }
+ else
+ {
+   likeCounter.remove;
+ }
+}
+}
+
+export const likeCard = (card, putLike, deleteLike, myProfileData) => {
+  const likeButton = card.querySelector(".card__like-button");
+  const likeCounter = card.querySelector(".likes-counter");
+  if (card.LikedByMe !== true) {
+    putLike(card, myProfileData)
+      .then((res) => {
+        if (res.ok) {
+          likeCounter.textContent = Number(likeCounter.textContent) + 1;
+          return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      })
+      .then(() => {
+        card.LikedByMe = true;
+        likeButton.classList.toggle("card__like-button_is-active");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } else {
+    card.LikedByMe = false;
+    likeCounter.textContent = Number(likeCounter.textContent) - 1;
+    if (likeCounter === 0) {
+      likeCounter.remove;
+    } else {
+      likeButton.classList.toggle("card__like-button_is-active");
     }
-    else
-    {
-      likeCounter.textContent = Number(likeCounter.textContent) + 1;
-    }
-    evt.target.classList.toggle("card__like-button_is-active");
+    deleteLike(card, myProfileData);
   }
-  
+};
 
