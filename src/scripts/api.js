@@ -1,9 +1,14 @@
-export const getCards = () => {
-  return fetch("https://nomoreparties.co/v1/wff-cohort-8/cards ", {
+const config = {
+    baseUrl: 'https://nomoreparties.co/v1/wff-cohort-8',
     headers: {
-      authorization: "275e97d7-7ef3-4926-bcb7-3f2c8fd87314",
-      "Content-Type": "application/json",
-    },
+      authorization: '275e97d7-7ef3-4926-bcb7-3f2c8fd87314',
+      'Content-Type': 'application/json'
+    }
+  }
+
+export const getCards = () => {
+  return fetch(`${config.baseUrl}/cards`, {
+    headers: config.headers,
   }).then((res) => {
     if (res.ok) {
       return res.json();
@@ -13,11 +18,8 @@ export const getCards = () => {
 };
 
 export const getProfile = () => {
-  return fetch(`https://nomoreparties.co/v1/wff-cohort-8/users/me`, {
-    headers: {
-      authorization: "275e97d7-7ef3-4926-bcb7-3f2c8fd87314",
-      "Content-Type": "application/json",
-    },
+  return fetch(`${config.baseUrl}/users/me`, {
+    headers: config.headers,
   }).then((res) => {
     if (res.ok) {
       return res.json();
@@ -27,26 +29,25 @@ export const getProfile = () => {
 };
 
 export const updateProfile = (name, about) => {
-  return fetch(`https://nomoreparties.co/v1/wff-cohort-8/users/me`, {
+  return fetch(`${config.baseUrl}/users/me`, {
     method: "PATCH",
-    headers: {
-      authorization: "275e97d7-7ef3-4926-bcb7-3f2c8fd87314",
-      "Content-Type": "application/json",
-    },
+    headers: config.headers,
     body: JSON.stringify({
       name: name,
       about: about,
     }),
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
   });
 };
 
 export const createMyCard = (name, link, idCard) => {
-  return fetch(`https://nomoreparties.co/v1/wff-cohort-8/cards`, {
+  return fetch(`${config.baseUrl}/cards`, {
     method: "POST",
-    headers: {
-      authorization: "275e97d7-7ef3-4926-bcb7-3f2c8fd87314",
-      "Content-Type": "application/json",
-    },
+    headers: config.headers,
     body: JSON.stringify({
       name: name,
       link: link,
@@ -62,12 +63,10 @@ export const createMyCard = (name, link, idCard) => {
 
 export const deleteMyCard = (card, myProfileData) => {
     return fetch(
-      `https://nomoreparties.co/v1/wff-cohort-8/cards/${card.ElementId}`,
+      `${config.baseUrl}/cards/${card.ElementId}`,
       {
         method: "DELETE",
-        headers: {
-          authorization: "275e97d7-7ef3-4926-bcb7-3f2c8fd87314",
-        },
+        headers: config.headers,
       }
     ).then((res) => {
       if (res.ok) {
@@ -79,12 +78,9 @@ export const deleteMyCard = (card, myProfileData) => {
 
 
 export const updateAvatar = (link) => {
-  return fetch(`https://nomoreparties.co/v1/wff-cohort-8/users/me/avatar`, {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: "PATCH",
-    headers: {
-      authorization: "275e97d7-7ef3-4926-bcb7-3f2c8fd87314",
-      "Content-Type": "application/json",
-    },
+    headers: config.headers,
     body: JSON.stringify({
       avatar: link,
     }),
@@ -98,24 +94,30 @@ export const updateAvatar = (link) => {
 
 export const putLike = (card, myProfileData) => {
   return fetch(
-    `https://nomoreparties.co/v1/wff-cohort-8/cards/likes/${card.ElementId}`,
+    `${config.baseUrl}/cards/likes/${card.ElementId}`,
     {
       method: "PUT",
-      headers: {
-        authorization: "275e97d7-7ef3-4926-bcb7-3f2c8fd87314",
-      },
+      headers: config.headers,
     }
-  );
+  ).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
 };
 
 export const deleteLike = (card, myProfileData) => {
   return fetch(
-    `https://nomoreparties.co/v1/wff-cohort-8/cards/likes/${card.ElementId}`,
+    `${config.baseUrl}/cards/likes/${card.ElementId}`,
     {
       method: "DELETE",
-      headers: {
-        authorization: "275e97d7-7ef3-4926-bcb7-3f2c8fd87314",
-      },
+      headers: config.headers,
     }
-  );
+  ).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
 };

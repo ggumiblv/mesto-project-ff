@@ -121,7 +121,6 @@ function handleProfileFormSubmit(evt) {
       if (res.ok) {
         return res.json();
       }
-      return Promise.reject(`Ошибка: ${res.status}`);
     })
     .finally(() => {
       popupProfileButton.textContent = "Сохранить";
@@ -194,7 +193,7 @@ enableValidation({
 });
 
 // API
-
+function getAllCards () {
 getCards()
   .then((result) => {
     result.forEach(function (cardDetails) {
@@ -219,7 +218,9 @@ getCards()
 const getProfileData = () => {
   return myProfileData;
 };
+};
 
+function getMyProfile () {
 getProfile()
   .then((data) => {
     myProfileData = data;
@@ -239,19 +240,20 @@ getProfile()
   .catch((error) => {
     console.log(error);
   });
+};
 
-Promise.all([getCards(), getProfile(), makeNewAvatar()])
+Promise.all([getAllCards(), getMyProfile()])
   .then(() => console.log("Данные успешно загружены и отображены на странице"))
   .catch((error) => console.error(error));
 
-function makeNewAvatar() {
-  avatarImage.addEventListener("click", () => {
-    openPopUp(avatarPopup);
-  });
+//change avatar
 
-  avatarButton.addEventListener("click", () => {
-    const link = avatarInput.value;
-    updateAvatar(link);
-    avatarButton.textContent = "Сохранение...";
-  });
-}
+avatarImage.addEventListener("click", () => {
+  openPopUp(avatarPopup);
+});
+
+avatarButton.addEventListener("click", () => {
+  const link = avatarInput.value;
+  updateAvatar(link);
+  avatarButton.textContent = "Сохранение...";
+});
