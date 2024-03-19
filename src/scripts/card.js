@@ -39,14 +39,12 @@ export function createCard(cardDetails, deleteMyCard, likeCard, openPopUp, openI
       deleteButton.addEventListener("click", () => {
       openPopUp(deleteCardPopup);
       deleteSureButton.addEventListener("click", () => {
+
         deleteMyCard(cardElement, myProfileData)
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          }
-          return Promise.reject(`Ошибка: ${res.status}`);
+        .then(() => {
+         cardElement.remove();
         }).finally(() => {
-          deleteSureButton.textContent = "Сохранить";
+          deleteSureButton.textContent = "Да";
         });
 
         closePopup(deleteCardPopup);

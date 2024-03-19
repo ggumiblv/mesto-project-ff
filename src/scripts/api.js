@@ -40,7 +40,7 @@ export const updateProfile = (name, about) => {
   });
 };
 
-export const createMyCard = (name, link) => {
+export const createMyCard = (name, link, idCard) => {
   return fetch(`https://nomoreparties.co/v1/wff-cohort-8/cards`, {
     method: "POST",
     headers: {
@@ -50,12 +50,17 @@ export const createMyCard = (name, link) => {
     body: JSON.stringify({
       name: name,
       link: link,
+      _id: idCard,
     }),
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
   });
 };
 
 export const deleteMyCard = (card, myProfileData) => {
-  if (card.CreatorID === myProfileData._id) {
     return fetch(
       `https://nomoreparties.co/v1/wff-cohort-8/cards/${card.ElementId}`,
       {
@@ -64,9 +69,14 @@ export const deleteMyCard = (card, myProfileData) => {
           authorization: "275e97d7-7ef3-4926-bcb7-3f2c8fd87314",
         },
       }
-    );
+    ).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    });
   }
-};
+
 
 export const updateAvatar = (link) => {
   return fetch(`https://nomoreparties.co/v1/wff-cohort-8/users/me/avatar`, {
@@ -109,5 +119,3 @@ export const deleteLike = (card, myProfileData) => {
     }
   );
 };
-
-

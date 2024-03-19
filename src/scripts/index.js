@@ -9,7 +9,7 @@ import {
   createMyCard,
   deleteMyCard,
   deleteLike,
-  putLike
+  putLike,
 } from "./api";
 import { enableValidation, clearValidation } from "./validation";
 
@@ -139,26 +139,27 @@ function createNewCard(evt) {
 
   const name = namePlaceInput.value;
   const link = linkPlaceInput.value;
+  const idCard = myProfileData._id;
 
-  const myNewCard = { name: placesList, alt: placesList, link: link };
-  const newCardElement = createCard(
-    myNewCard,
-    deleteMyCard,
-    likeCard,
-    openPopUp,
-    openImage,
-    getProfileData, putLike, deleteLike
-  );
-
-  placesList.prepend(newCardElement, placesList.firstChild);
   popupCardButton.textContent = "Сохранение...";
 
-  createMyCard(name, link)
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
+  createMyCard(name, link, idCard)
+    .then((data) => {
+      placesList.prepend(
+        createCard(
+          data,
+          deleteMyCard,
+          likeCard,
+          openPopUp,
+          openImage,
+          getProfileData,
+          putLike,
+          deleteLike
+        )
+      );
+    })
+    .catch((error) => {
+      console.log(error);
     })
     .finally(() => {
       popupCardButton.textContent = "Создать";
@@ -204,7 +205,9 @@ getCards()
           likeCard,
           openPopUp,
           openImage,
-          getProfileData, putLike, deleteLike
+          getProfileData,
+          putLike,
+          deleteLike
         )
       );
     });
@@ -237,7 +240,9 @@ getProfile()
     console.log(error);
   });
 
-Promise.all([getCards(), getProfile(), makeNewAvatar()]);
+Promise.all([getCards(), getProfile(), makeNewAvatar()])
+  .then(() => console.log("Данные успешно загружены и отображены на странице"))
+  .catch((error) => console.error(error));
 
 function makeNewAvatar() {
   avatarImage.addEventListener("click", () => {
