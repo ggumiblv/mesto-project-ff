@@ -214,11 +214,12 @@ getCards()
   .catch((error) => {
     console.log(error);
   });
+};
 
 const getProfileData = () => {
   return myProfileData;
 };
-};
+
 
 function getMyProfile () {
 getProfile()
