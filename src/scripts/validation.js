@@ -44,8 +44,7 @@ export const isValid = (formElement, inputElement, validationConfig) => {
     // Если есть хотя бы один невалидный инпут
     if (hasInvalidInput(inputList)) {
       // сделай кнопку неактивной
-      buttonElement.disabled = true;
-      buttonElement.classList.add(validationConfig.inactiveButtonClass);
+      disableSubmitButton(buttonElement, validationConfig)
     } else {
       // иначе сделай кнопку активной
       buttonElement.disabled = false;
@@ -93,7 +92,12 @@ export const setEventListeners = (formElement, validationConfig) => {
   
     inputList.forEach((inputElement) => {
       hideInputError(formElement, inputElement, hideInputError);
-      validationConfig.formSelector.reset;
     });
-    submitButton.classList.add(validationConfig.inactiveButtonClass);
+    disableSubmitButton(submitButton, validationConfig);
   };
+
+  const disableSubmitButton = (button, validationConfig) => {
+    button.disabled = true;
+    button.classList.add(validationConfig.inactiveButtonClass);
+  }
+  
