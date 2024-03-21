@@ -70,7 +70,7 @@ export const updateAvatar = (link) => {
   }).then(handleResponse);
 };
 
-export const putLike = (card, myProfileData) => {
+export const putLike = (card) => {
   return fetch(
     `${config.baseUrl}/cards/likes/${card.ElementId}`,
     {
@@ -80,7 +80,7 @@ export const putLike = (card, myProfileData) => {
   ).then(handleResponse);
 };
 
-export const deleteLike = (card, myProfileData) => {
+export const deleteLike = (card) => {
   return fetch(
     `${config.baseUrl}/cards/likes/${card.ElementId}`,
     {

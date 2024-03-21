@@ -98,9 +98,9 @@ function handleProfileFormSubmit(evt) {
   popupProfileButton.textContent = "Сохранение...";
 
   updateProfile(name, about)
-    .then(() => {
-      currentName.textContent = nameInput.value;
-      currentDescription.textContent = jobInput.value;
+    .then((result) => {
+      currentName.textContent = result.name;
+      currentDescription.textContent = result.about;
     })
     .finally(() => {
       popupProfileButton.textContent = "Сохранить";
@@ -211,11 +211,11 @@ avatarImage.addEventListener("click", () => {
 });
 
 avatarButton.addEventListener("click", () => {
-  let link = avatarInput.value;
+  const link = avatarInput.value;
   avatarButton.textContent = "Сохранение...";
   updateAvatar(link)
-    .then(() => {
-      avatarImage.style.backgroundImage = `url(${myProfileData.avatar})`;
+    .then((result) => {
+      avatarImage.style.backgroundImage = `url(${result.avatar})`;
     })
     .finally(() => {
       avatarButton.textContent = "Сохранить";
