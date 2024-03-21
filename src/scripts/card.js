@@ -44,7 +44,7 @@ export function createCard(
     }
 
     likeButton.addEventListener("click", () => {
-      likeCard(cardElement, putLike, deleteLike, myProfileData, cardDetails);
+      likeCard(cardElement, putLike, deleteLike);
     });
 
     cardImage.addEventListener("click", () => {
@@ -69,8 +69,6 @@ export const likeCard = (
   card,
   putLike,
   deleteLike,
-  myProfileData,
-  cardDetails
 ) => {
   const likeMethod = card.LikedByMe ? deleteLike : putLike;
   const likeButton = card.querySelector(".card__like-button");
